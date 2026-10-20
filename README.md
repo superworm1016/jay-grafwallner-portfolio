@@ -2,16 +2,23 @@
 
 Personal portfolio site for Jay Grafwallner, Senior Full Stack Software Engineer.
 
-Built with **React 19**, **TypeScript**, **Vite**, and **Tailwind CSS v4**. Single page, no backend, light and dark themes, fully responsive.
+Built with **React 19**, **TypeScript**, **Vite**, and **Tailwind CSS v4**. Single page, no backend, dark theme with a green accent, fully responsive, and respects reduced-motion settings.
 
 ## Sections
 
-- **Hero**: name, title, availability, résumé download, and quick stats
-- **About**: summary, working principles, and education
-- **Skills**: core stack plus the seven skill groups from the résumé
-- **Experience**: timeline of roles at Verizon, DealerSocket, and Expedia Group
-- **Selected work**: case studies, including an interactive RAG pipeline diagram
-- **Contact**: email (with copy-to-clipboard), phone, location, and résumé
+- **Hero**: availability badge, headline, orbiting tech-logo visual, and a stats bar
+- **Marquee**: scrolling rows of technologies
+- **About**: summary plus a "Why work with me?" checklist
+- **Expertise**: expandable list of six focus areas
+- **Stack**: floating tech logos with mouse parallax, plus a full list of tools
+- **Selected work**: case-study cards that stack as you scroll
+- **Process**: four-step delivery approach
+- **Experience**: roles at Verizon, DealerSocket, and Expedia Group, plus education
+- **Under the hood**: animated terminal showing an illustrative release workflow
+- **Interactive**: clickable RAG pipeline walkthrough
+- **Contact**: message form (opens the visitor's email app), email with copy button, phone, résumé download, and FAQ
+
+Tech logos in `src/assets/tech/` come from [Devicon](https://devicon.dev) (MIT).
 
 ## Getting started
 
@@ -24,7 +31,7 @@ npm run preview   # serve the production build
 
 ## Editing content
 
-All text lives in [`src/data/profile.ts`](src/data/profile.ts): contact details, summary, skills, roles, and case studies. Components read from that file, so most updates don't need any component changes.
+All text lives in [`src/data/profile.ts`](src/data/profile.ts): contact details, summary, expertise, stack, case studies, process, roles, terminal lines, and FAQ. Components read from that file, so most updates don't need any component changes. Theme colors and fonts are in [`src/index.css`](src/index.css).
 
 The downloadable résumé is [`public/resume.pdf`](public/resume.pdf). Replace that file to update it.
 
@@ -50,9 +57,11 @@ The Vite `base` is set to `./`, so the build works at a domain root or under a s
 ```
 src/
   data/profile.ts        # all site content
-  components/            # Nav, Hero, About, Skills, Experience, Projects, RagPipeline, Contact, Footer
-  hooks/                 # useTheme (light/dark), useActiveSection (nav highlighting)
-  index.css              # Tailwind import, theme tokens, base styles
+  data/tech.ts           # tech logo imports and display names
+  assets/tech/           # tech logo SVGs
+  components/            # one component per section, plus shared Section/Reveal helpers
+  hooks/                 # useActiveSection (nav highlighting), useInView (scroll reveals)
+  index.css              # Tailwind import, theme tokens, animations, base styles
 public/
   resume.pdf
   favicon.svg

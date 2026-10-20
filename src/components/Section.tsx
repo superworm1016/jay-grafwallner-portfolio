@@ -1,24 +1,54 @@
 import type { ReactNode } from 'react'
+import { prefersReducedMotion, useInView } from '../hooks/useInView'
+
+export function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
+  const [ref, shown] = useInView<HTMLDivElement>(undefined, prefersReducedMotion())
+  return (
+    <div
+      ref={ref}
+      style={shown ? { transitionDelay: `${delay}ms` } : undefined}
+      className={`transition duration-700 ease-out ${shown ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'} ${className}`}
+    >
+      {children}
+    </div>
+  )
+}
+
+export function SectionLabel({ children }: { children: ReactNode }) {
+  return (
+    <p className="flex items-center gap-3 font-mono text-xs font-medium tracking-[0.2em] text-primary uppercase">
+      <span aria-hidden="true" className="h-px w-6 bg-primary/70" />
+      {children}
+    </p>
+  )
+}
+
+export function SectionTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="mt-4 max-w-2xl font-display text-4xl leading-[1.1] font-bold tracking-tight text-balance sm:text-[2.75rem]">
+      {children}
+    </h2>
+  )
+}
 
 type SectionProps = {
   id: string
-  index: string
-  eyebrow: string
-  title: string
+  label: string
+  title: ReactNode
   intro?: string
   children: ReactNode
 }
 
-export function Section({ id, index, eyebrow, title, intro, children }: SectionProps) {
+export function Section({ id, label, title, intro, children }: SectionProps) {
   return (
-    <section id={id} className="border-t border-zinc-200/80 py-20 sm:py-28 dark:border-zinc-800/80">
+    <section id={id} className="border-t border-line py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p className="font-mono text-sm text-teal-700 dark:text-teal-400">
-          <span className="text-zinc-400 dark:text-zinc-500">{index} /</span> {eyebrow}
-        </p>
-        <h2 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">{title}</h2>
-        {intro && <p className="mt-4 max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">{intro}</p>}
-        <div className="mt-12">{children}</div>
+        <Reveal>
+          <SectionLabel>{label}</SectionLabel>
+          <SectionTitle>{title}</SectionTitle>
+          {intro && <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-fg">{intro}</p>}
+        </Reveal>
+        <div className="mt-14">{children}</div>
       </div>
     </section>
   )
@@ -26,8 +56,16 @@ export function Section({ id, index, eyebrow, title, intro, children }: SectionP
 
 export function Chip({ children }: { children: ReactNode }) {
   return (
-    <li className="rounded-md border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300">
-      {children}
-    </li>
+    <li className="rounded-md border border-line bg-white/[0.03] px-2 py-1 font-mono text-[11px] text-muted-fg">{children}</li>
   )
 }
+
+export function Logo() {
+  return (
+    <span className="grid size-8 place-items-center rounded-full border border-primary/30 bg-black font-display text-xs font-bold text-primary">
+      JG
+    </span>
+  )
+}
+
+export const pad = (n: number) => String(n).padStart(2, '0')

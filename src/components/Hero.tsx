@@ -1,151 +1,124 @@
 import { Fragment } from 'react'
 import { profile, stats } from '../data/profile'
-import { ArrowRightIcon, DownloadIcon, MailIcon, MapPinIcon } from './icons'
+import { techIcons, type TechKey } from '../data/tech'
+import { ArrowUpRightIcon, SparklesIcon } from './icons'
 
-const CODE_FIELDS: [string, string | string[]][] = [
-  ['name', profile.name],
-  ['role', 'Senior Full Stack Engineer'],
-  ['location', profile.location],
-  ['experience', '10+ years'],
-  ['stack', ['C#', '.NET', 'React', 'TypeScript']],
-  ['data', ['SQL Server', 'PostgreSQL', 'Redis']],
-  ['cloud', ['Azure', 'AWS', 'Kubernetes']],
-  ['ai', ['RAG', 'LangChain', 'LangGraph']],
+const RINGS: { size: string; seconds: number; reverse: boolean; nodes: TechKey[] }[] = [
+  { size: 'size-[17rem]', seconds: 36, reverse: false, nodes: ['csharp', 'react', 'azure'] },
+  { size: 'size-[27rem]', seconds: 60, reverse: true, nodes: ['typescript', 'sqlserver', 'docker', 'kubernetes'] },
 ]
 
-const tok = {
-  keyword: 'text-fuchsia-700 dark:text-fuchsia-400',
-  prop: 'text-sky-700 dark:text-sky-300',
-  str: 'text-emerald-700 dark:text-emerald-400',
-  fn: 'text-amber-700 dark:text-amber-300',
-  comment: 'text-zinc-400 dark:text-zinc-500',
-}
-
-function CodeCard() {
+function Orbit() {
   return (
-    <div
-      aria-hidden="true"
-      className="relative rounded-2xl border border-zinc-200 bg-white shadow-2xl shadow-zinc-900/[0.07] dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-black/40"
-    >
-      <div className="flex items-center gap-2 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-        <span className="size-3 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-        <span className="size-3 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-        <span className="size-3 rounded-full bg-zinc-200 dark:bg-zinc-700" />
-        <span className="ml-2 font-mono text-xs text-zinc-500">engineer.ts</span>
+    <div aria-hidden="true" className="relative grid size-[28rem] shrink-0 scale-90 place-items-center xl:scale-100">
+      <div className="absolute size-80 rounded-full bg-primary/15 blur-3xl" />
+      {RINGS.map((ring) => {
+        const spin = (reverse: boolean) => `orbit ${ring.seconds}s linear infinite${reverse ? ' reverse' : ''}`
+        return (
+          <div
+            key={ring.seconds}
+            className={`absolute ${ring.size} rounded-full border border-dashed border-white/10`}
+            style={{ animation: spin(ring.reverse) }}
+          >
+            {ring.nodes.map((tech, i) => {
+              const angle = (360 / ring.nodes.length) * i + (ring.reverse ? 45 : 0)
+              return (
+                <div key={tech} className="absolute inset-0" style={{ transform: `rotate(${angle}deg)` }}>
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div style={{ transform: `rotate(${-angle}deg)` }}>
+                      <div
+                        className="grid size-14 place-items-center rounded-2xl border border-line bg-card shadow-lg shadow-black/40"
+                        style={{ animation: spin(!ring.reverse) }}
+                      >
+                        <img src={techIcons[tech]} alt="" className="size-7" draggable={false} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )
+      })}
+      <div className="relative grid size-36 place-items-center rounded-full border border-primary/30 bg-card shadow-[0_0_90px_-10px_rgb(81_229_126/0.5)]">
+        <span className="font-display text-5xl font-bold tracking-tight">{profile.initials}</span>
       </div>
-      <pre className="overflow-x-auto p-5 font-mono text-[12.5px] leading-6 text-zinc-700 dark:text-zinc-300">
-        <code>
-          <div>
-            <span className={tok.keyword}>const</span> engineer = {'{'}
-          </div>
-          {CODE_FIELDS.map(([key, value]) => (
-            <div key={key}>
-              {'  '}
-              <span className={tok.prop}>{key}</span>:{' '}
-              {Array.isArray(value) ? (
-                <>
-                  [
-                  {value.map((v, i) => (
-                    <Fragment key={v}>
-                      {i > 0 && ', '}
-                      <span className={tok.str}>"{v}"</span>
-                    </Fragment>
-                  ))}
-                  ]
-                </>
-              ) : (
-                <span className={tok.str}>"{value}"</span>
-              )}
-              ,
-            </div>
-          ))}
-          <div>{'};'}</div>
-          <div>&nbsp;</div>
-          <div>
-            engineer.<span className={tok.fn}>ship</span>();{' '}
-            <span className={tok.comment}>// architecture → production</span>
-          </div>
-        </code>
-      </pre>
     </div>
   )
 }
 
 export function Hero() {
   return (
-    <section id="top" className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-24">
+    <section id="top" className="relative isolate overflow-hidden pt-36 pb-24 sm:pt-44">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-zinc-300)_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,black,transparent)] dark:bg-[radial-gradient(var(--color-zinc-800)_1px,transparent_1px)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgb(255_255_255/0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgb(255_255_255/0.04)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:radial-gradient(ellipse_80%_70%_at_50%_30%,black,transparent)]"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 right-0 -z-10 size-[36rem] rounded-full bg-teal-400/15 blur-3xl dark:bg-teal-500/10"
+        className="absolute -top-40 left-1/2 -z-10 h-[52rem] w-[80rem] -translate-x-1/2 bg-[radial-gradient(closest-side,rgb(81_229_126/0.14),transparent)]"
       />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.25fr_0.75fr]">
           <div>
-            <p className="inline-flex animate-rise items-center gap-2 rounded-full border border-emerald-600/20 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-300">
+            <p className="inline-flex animate-rise items-center gap-2.5 rounded-full border border-line bg-card/70 px-3.5 py-1.5 font-mono text-xs text-fg/80">
               <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60" />
+                <span className="relative inline-flex size-2 rounded-full bg-primary" />
               </span>
               {profile.availability}
             </p>
 
-            <h1 className="mt-6 animate-rise text-5xl font-extrabold tracking-tight [animation-delay:80ms] sm:text-6xl xl:text-7xl">
-              {profile.name}
+            <h1 className="mt-7 animate-rise font-display text-5xl leading-[1.05] font-bold tracking-tight [animation-delay:80ms] sm:text-6xl lg:text-[3.5rem]">
+              <span className="block">Hi, I&rsquo;m {profile.firstName}.</span>
+              <span className="block text-fg/50">I build enterprise apps</span>
+              <span className="block text-fg/50">
+                and <span className="text-primary">AI that ships.</span>
+              </span>
             </h1>
-            <p className="mt-4 animate-rise font-mono text-base text-teal-700 [animation-delay:140ms] sm:text-lg dark:text-teal-400">
-              {profile.title}
-            </p>
-            <p className="mt-6 max-w-xl animate-rise text-lg leading-relaxed text-zinc-600 [animation-delay:200ms] dark:text-zinc-400">
+
+            <p className="mt-7 max-w-xl animate-rise text-lg leading-relaxed text-muted-fg [animation-delay:160ms]">
               {profile.intro}
             </p>
 
-            <div className="mt-8 flex animate-rise flex-wrap gap-3 [animation-delay:260ms]">
+            <div className="mt-9 flex animate-rise flex-wrap gap-3 [animation-delay:240ms]">
               <a
-                href="#work"
-                className="group inline-flex items-center gap-2 rounded-lg bg-teal-700 px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-teal-800 dark:bg-teal-400 dark:text-zinc-950 dark:hover:bg-teal-300"
+                href="#contact"
+                className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-medium text-primary-fg shadow-[0_0_40px_-8px_rgb(81_229_126/0.6)] transition hover:brightness-110"
               >
-                See my work
-                <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />
+                Get in touch
+                <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
               <a
-                href={profile.resumeUrl}
-                download={profile.resumeFileName}
-                className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-5 py-3 font-medium text-zinc-800 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
+                href="#work"
+                className="inline-flex items-center rounded-full border border-line bg-card/60 px-6 py-3 font-medium text-fg transition-colors hover:border-white/20 hover:bg-card"
               >
-                <DownloadIcon className="size-4" />
-                Download résumé
+                View selected work
               </a>
             </div>
 
-            <ul className="mt-8 flex animate-rise flex-wrap gap-x-6 gap-y-2 text-sm text-zinc-600 [animation-delay:320ms] dark:text-zinc-400">
-              <li className="flex items-center gap-2">
-                <MapPinIcon className="size-4" />
-                {profile.location}
-              </li>
-              <li>
-                <a href={`mailto:${profile.email}`} className="flex items-center gap-2 hover:text-teal-700 dark:hover:text-teal-400">
-                  <MailIcon className="size-4" />
-                  {profile.email}
-                </a>
-              </li>
-            </ul>
+            <p className="mt-9 flex animate-rise flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-muted-fg [animation-delay:320ms]">
+              <SparklesIcon className="size-4 text-primary" />
+              {profile.tagline.map((item, i) => (
+                <Fragment key={item}>
+                  {i > 0 && <span aria-hidden="true">·</span>}
+                  <span>{item}</span>
+                </Fragment>
+              ))}
+            </p>
           </div>
 
-          <div className="hidden animate-rise [animation-delay:240ms] sm:block">
-            <CodeCard />
+          <div className="hidden animate-rise justify-center [animation-delay:200ms] lg:flex">
+            <Orbit />
           </div>
         </div>
 
-        <dl className="mt-16 grid gap-8 border-t border-zinc-200 pt-10 sm:grid-cols-3 dark:border-zinc-800">
+        <dl className="mt-20 grid animate-rise grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line [animation-delay:400ms] lg:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col-reverse">
-              <dt className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{stat.label}</dt>
-              <dd className="text-4xl font-bold tracking-tight">{stat.value}</dd>
+            <div key={stat.label} className="flex flex-col-reverse gap-2 bg-card/95 px-6 py-6 sm:px-7">
+              <dt className="font-mono text-[11px] tracking-[0.18em] text-muted-fg uppercase">{stat.label}</dt>
+              <dd className="font-display text-4xl font-bold tracking-tight">{stat.value}</dd>
             </div>
           ))}
         </dl>

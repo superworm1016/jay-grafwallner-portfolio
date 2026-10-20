@@ -1,8 +1,20 @@
 // All site content lives here. Edit this file to update the portfolio.
+import type { TechKey } from './tech'
 
 export type Stat = { value: string; label: string }
-export type Principle = { title: string; body: string }
-export type SkillGroup = { name: string; items: string[] }
+export type ExpertiseIcon = 'code' | 'sparkles' | 'cloud' | 'database' | 'shield' | 'users'
+export type ExpertiseItem = { title: string; tag: string; icon: ExpertiseIcon; body: string; stack: string[] }
+export type StackTile = { tech: TechKey; x: number; y: number; size: number; depth: number }
+export type WorkItem = {
+  tag: string
+  context: string
+  title: string
+  summary: string
+  points: string[]
+  stack: string[]
+  outcome: string
+}
+export type ProcessStep = { title: string; body: string; detail: string }
 export type Role = {
   title: string
   company: string
@@ -12,18 +24,14 @@ export type Role = {
   highlights: string[]
   stack: string[]
 }
-export type CaseStudy = {
-  title: string
-  context: string
-  summary: string
-  points: string[]
-  stack: string[]
-}
+export type TerminalEntry = { cmd: string; out: string[] }
 export type PipelineStep = { name: string; detail: string }
+export type Faq = { q: string; a: string }
 
 export const profile = {
   name: 'Jay Grafwallner',
   firstName: 'Jay',
+  handle: 'jaygrafwallner',
   initials: 'JG',
   title: 'Senior Full Stack Software Engineer',
   location: 'Orlando, FL',
@@ -32,107 +40,263 @@ export const profile = {
   phoneHref: 'tel:+17705803784',
   resumeUrl: 'resume.pdf',
   resumeFileName: 'Jay_Grafwallner_Resume.pdf',
-  availability: 'Open to senior full-stack & AI engineering roles',
+  availability: 'Available for senior full-stack & AI roles',
   intro:
-    'Senior full-stack engineer with 10+ years taking web applications from architecture and data modeling through testing, automated deployment, and production support, across C#/.NET, React, TypeScript, SQL Server, Azure, and production RAG infrastructure.',
+    'Senior full-stack engineer with 10+ years in C#/.NET, React, TypeScript, SQL Server, and Azure, taking applications from architecture and data modeling to automated deployment and production support. Most recently: production RAG pipelines at Verizon.',
+  tagline: ['C#/.NET', 'React', 'Azure', 'RAG', 'Since 2014'],
   about: [
-    "I'm a senior full-stack engineer with more than ten years of experience delivering web applications end to end: architecture and data modeling, the UI and APIs, testing, automated deployment, and the production support that follows.",
+    "I'm Jay Grafwallner, a senior full-stack engineer with more than ten years of experience delivering web applications end to end: architecture and data modeling, the UI and APIs, testing, automated deployment, and the production support that follows.",
     'Most recently I led architecture and hands-on implementation of enterprise web and AI applications at Verizon, including production RAG pipelines with permission-aware retrieval. Before that I built SaaS applications and microservices at DealerSocket and customer-facing web applications at Expedia Group.',
     'I lead technical decisions, review code, mentor engineers, and work directly with product and business stakeholders in Agile teams.',
   ],
 }
 
 export const stats: Stat[] = [
-  { value: '10+', label: 'years of professional software engineering' },
-  { value: '6+', label: 'years leading architecture at Verizon' },
-  { value: '3', label: 'enterprise teams: Verizon, DealerSocket, Expedia' },
+  { value: '10+', label: 'Years experience' },
+  { value: '6+', label: 'Years at Verizon' },
+  { value: '3', label: 'Enterprise companies' },
+  { value: 'B.S.', label: 'Computer Science, UCF' },
 ]
 
-export const principles: Principle[] = [
-  {
-    title: 'Architecture to production',
-    body: 'Turn stakeholder requirements into technical plans, then stay hands-on through release, monitoring, troubleshooting, and maintenance.',
-  },
-  {
-    title: 'Data that holds up',
-    body: 'Relational models in SQL Server and PostgreSQL, tuned with the right indexes, caching, and asynchronous processing.',
-  },
-  {
-    title: 'Quality built in',
-    body: 'Unit and integration tests, TDD, and peer code reviews as a normal part of delivery, not an afterthought.',
-  },
-  {
-    title: 'Teams that grow',
-    body: 'Guide architecture decisions, review code, and mentor engineers while working closely with product and business partners.',
-  },
-]
-
-export const education = {
-  degree: 'Bachelor of Science in Computer Science',
-  school: 'University of Central Florida',
-  location: 'Orlando, FL',
-  years: '2009 – 2013',
+export const whyMe = {
+  title: 'Why work with me?',
+  intro: 'An engineer who owns the whole lifecycle, from the first architecture sketch to the production fix.',
+  points: [
+    '10+ years of full-stack delivery',
+    'Production RAG pipelines',
+    'C#/.NET and Java/Spring Boot',
+    'Architecture & code review lead',
+    'CI/CD and infrastructure as code',
+    'Mentor to engineers',
+  ],
 }
 
-export const coreStack = [
-  'C#',
-  '.NET Core',
-  'ASP.NET MVC',
-  'React',
-  'TypeScript',
-  'SQL Server',
-  'Azure',
-  'RAG',
+export const marquee = {
+  label: 'Shipped in production at Verizon · DealerSocket · Expedia Group',
+  primary: [
+    'C#',
+    '.NET Core',
+    'ASP.NET MVC',
+    'React',
+    'TypeScript',
+    'Angular',
+    'SQL Server',
+    'PostgreSQL',
+    'Azure',
+    'AWS',
+    'Docker',
+    'Kubernetes',
+    'Terraform',
+    'Java',
+    'Spring Boot',
+    'Node.js',
+    'Python',
+  ],
+  secondary: [
+    'RAG pipelines',
+    'Vector search',
+    'Embeddings',
+    'LangChain',
+    'LangGraph',
+    'CI/CD',
+    'GitHub Actions',
+    'Azure DevOps',
+    'Entity Framework',
+    'Redis',
+    'MongoDB',
+    'OAuth 2.0',
+    'JWT',
+    'TDD',
+    'Microservices',
+    'REST APIs',
+  ],
+}
+
+export const expertise: ExpertiseItem[] = [
+  {
+    title: 'Full-Stack Web Applications',
+    tag: 'Web',
+    icon: 'code',
+    body: 'End-to-end web applications in C#/.NET and React/TypeScript: ASP.NET MVC and Web API backends, responsive frontends, dashboards, business portals, and workflow apps.',
+    stack: ['C#', 'ASP.NET Core', 'ASP.NET MVC', 'React', 'TypeScript', 'Angular'],
+  },
+  {
+    title: 'AI & RAG Engineering',
+    tag: 'AI',
+    icon: 'sparkles',
+    body: 'Production RAG pipelines: document ingestion and transformation, chunking, embeddings, vector retrieval, contextual prompts, and answers linked back to their sources.',
+    stack: ['LLMs', 'LangChain', 'LangGraph', 'Embeddings', 'Vector search'],
+  },
+  {
+    title: 'Cloud & Delivery Automation',
+    tag: 'DevOps',
+    icon: 'cloud',
+    body: 'Automated builds and deployments with GitHub Actions and Azure DevOps, containerized on Docker and Kubernetes, with infrastructure defined in Terraform.',
+    stack: ['Azure', 'AWS', 'GitHub Actions', 'Docker', 'Kubernetes', 'Terraform'],
+  },
+  {
+    title: 'Data Modeling & Performance',
+    tag: 'Data',
+    icon: 'database',
+    body: 'Relational models in SQL Server and PostgreSQL, tuned with indexing, caching, and asynchronous processing for transactional and AI-assisted workloads.',
+    stack: ['SQL Server', 'PostgreSQL', 'Redis', 'MongoDB', 'Entity Framework'],
+  },
+  {
+    title: 'Security & Access Control',
+    tag: 'Security',
+    icon: 'shield',
+    body: 'Authentication, authorization, and data controls: OAuth 2.0, JWT, role-based access control, and permission-aware retrieval for sensitive enterprise data.',
+    stack: ['OAuth 2.0', 'JWT', 'RBAC', 'Permission-aware RAG'],
+  },
+  {
+    title: 'Technical Leadership',
+    tag: 'Leadership',
+    icon: 'users',
+    body: 'Architecture decisions, peer code reviews, delivery planning, and mentoring, working closely with product and business stakeholders in Agile teams.',
+    stack: ['Architecture', 'Code review', 'Mentoring', 'TDD', 'Agile Scrum'],
+  },
 ]
 
-export const skillGroups: SkillGroup[] = [
+// Positions are percentages of the panel; depth (0–1) controls parallax, size, and focus.
+export const stackTiles: StackTile[] = [
+  { tech: 'react', x: 17, y: 54, size: 132, depth: 1 },
+  { tech: 'csharp', x: 62, y: 32, size: 120, depth: 0.9 },
+  { tech: 'dotnet', x: 84, y: 64, size: 104, depth: 0.75 },
+  { tech: 'typescript', x: 41, y: 72, size: 84, depth: 0.7 },
+  { tech: 'azure', x: 37, y: 26, size: 70, depth: 0.55 },
+  { tech: 'sqlserver', x: 83, y: 22, size: 74, depth: 0.5 },
+  { tech: 'postgresql', x: 61, y: 74, size: 72, depth: 0.5 },
+  { tech: 'docker', x: 94, y: 42, size: 60, depth: 0.35 },
+  { tech: 'kubernetes', x: 8, y: 18, size: 58, depth: 0.35 },
+  { tech: 'terraform', x: 26, y: 86, size: 50, depth: 0.3 },
+  { tech: 'java', x: 50, y: 46, size: 54, depth: 0.3 },
+  { tech: 'githubactions', x: 74, y: 88, size: 50, depth: 0.3 },
+  { tech: 'nodejs', x: 6, y: 84, size: 52, depth: 0.3 },
+  { tech: 'python', x: 22, y: 20, size: 46, depth: 0.25 },
+]
+
+export const stackChips = [
+  'C#',
+  '.NET',
+  'ASP.NET Core',
+  'React',
+  'TypeScript',
+  'Angular',
+  'SQL Server',
+  'PostgreSQL',
+  'Redis',
+  'Azure',
+  'AWS',
+  'Docker',
+  'Kubernetes',
+  'Terraform',
+  'GitHub Actions',
+  'Java',
+  'Spring Boot',
+  'Node.js',
+  'Python',
+  'LangChain',
+  'LangGraph',
+]
+
+export const work: WorkItem[] = [
   {
-    name: 'C# & .NET',
-    items: ['C#', '.NET Framework', '.NET Core', 'ASP.NET MVC', 'ASP.NET Core', 'ASP.NET Web API', 'Entity Framework'],
-  },
-  {
-    name: 'Frontend',
-    items: ['TypeScript', 'JavaScript', 'React', 'Angular', 'HTML5', 'CSS3', 'Bootstrap', 'Tailwind CSS', 'Responsive design'],
-  },
-  {
-    name: 'Data engineering & AI',
-    items: [
-      'Document ingestion',
-      'Chunking',
-      'Embeddings',
-      'Vector search',
-      'RAG pipelines',
-      'LLMs',
-      'LangChain',
-      'LangGraph',
+    tag: 'AI · RAG',
+    context: 'Verizon',
+    title: 'Enterprise RAG search',
+    summary:
+      'Production retrieval-augmented generation pipelines that turn enterprise documents into grounded answers, each linked back to its source and scoped to what the user is allowed to see.',
+    points: [
+      'Document ingestion, transformation, and chunking',
+      'Embeddings and vector retrieval',
+      'Contextual prompts with source-linked responses',
+      'AI workflows connecting .NET and Java services',
     ],
+    stack: ['.NET', 'Java', 'LLMs', 'LangChain', 'LangGraph', 'Vector search', 'PostgreSQL'],
+    outcome: 'Answers linked back to their source material',
   },
   {
-    name: 'Data platforms',
-    items: ['SQL Server', 'PostgreSQL', 'MongoDB', 'MySQL', 'Redis', 'Data modeling', 'Query tuning', 'Indexing', 'Caching'],
-  },
-  {
-    name: 'Cloud & delivery',
-    items: [
-      'Azure',
-      'Azure DevOps',
-      'App Service',
-      'Azure Functions',
-      'AWS',
-      'GitHub Actions',
-      'CI/CD',
-      'Docker',
-      'Kubernetes',
-      'Terraform',
+    tag: 'Security',
+    context: 'Verizon',
+    title: 'Permission-aware data access',
+    summary:
+      'Authentication, authorization, and application data controls that keep sensitive enterprise information protected across web and AI workloads.',
+    points: [
+      'Permission-aware retrieval in the RAG layer',
+      'Authentication and authorization across services',
+      'PostgreSQL and SQL Server models tuned with indexes and caching',
+      'API access optimized for transactional and AI traffic',
     ],
+    stack: ['.NET', 'Java', 'PostgreSQL', 'SQL Server', 'AuthN / AuthZ'],
+    outcome: 'Users only retrieve what they are authorized to see',
   },
   {
-    name: 'Quality & leadership',
-    items: ['Unit & integration testing', 'TDD', 'Jest', 'JUnit', 'Mockito', 'Code reviews', 'Architecture', 'Mentoring', 'Agile Scrum'],
+    tag: 'DevOps',
+    context: 'Verizon',
+    title: 'Automated delivery platform',
+    summary:
+      'Build-and-deploy workflows that take services from commit to production, backed by monitoring, troubleshooting, and ongoing maintenance.',
+    points: [
+      'CI/CD pipelines in GitHub Actions',
+      'Containerized services on Docker and Kubernetes',
+      'Infrastructure as code with Terraform',
+      'Production monitoring and release support',
+    ],
+    stack: ['GitHub Actions', 'Docker', 'Kubernetes', 'Terraform'],
+    outcome: 'Repeatable, automated releases from commit to production',
   },
   {
-    name: 'Additional backend',
-    items: ['Java', 'Spring Boot', 'Node.js', 'Express.js', 'Python', 'REST APIs', 'Microservices', 'AuthN / AuthZ'],
+    tag: 'SaaS',
+    context: 'DealerSocket',
+    title: 'Enterprise SaaS services',
+    summary:
+      'SaaS applications, REST APIs, and microservices with React and Angular frontends, shipped through Azure DevOps pipelines.',
+    points: [
+      'Java/Spring Boot and Node.js microservices',
+      'OAuth 2.0, JWT, and role-based access control',
+      'Query tuning, indexing, caching, and async processing',
+      'Unit and integration tests with JUnit, Mockito, and Jest',
+    ],
+    stack: ['Spring Boot', 'Node.js', 'React', 'Angular', 'Azure DevOps', 'PostgreSQL'],
+    outcome: 'Improved operational reporting through tuning, caching, and async work',
+  },
+  {
+    tag: 'Web',
+    context: 'Expedia Group',
+    title: 'Customer & business web apps',
+    summary:
+      'Responsive customer-facing websites, business portals, internal dashboards, and workflow applications on the Microsoft stack.',
+    points: [
+      'REST APIs for auth, accounts, reporting, and documents',
+      'Layered C# architecture with modular service components',
+      'Entity Framework on SQL Server and MySQL',
+      'Administrative interfaces and workflow applications',
+    ],
+    stack: ['C#', 'ASP.NET MVC', 'Web API', 'Entity Framework', 'SQL Server'],
+    outcome: 'Reusable C# business logic shared across applications',
+  },
+]
+
+export const process: ProcessStep[] = [
+  {
+    title: 'Understand',
+    body: 'Translate stakeholder requirements into a technical plan with clear scope, milestones, and tradeoffs.',
+    detail: 'Product and business stakeholders stay involved through Agile planning and ongoing communication.',
+  },
+  {
+    title: 'Design',
+    body: 'Model the data and the service boundaries first: schemas, APIs, and access rules.',
+    detail: 'Indexes, caching, and asynchronous processing are planned up front, not bolted on later.',
+  },
+  {
+    title: 'Build & review',
+    body: 'Ship in small increments backed by unit and integration tests, with TDD where it fits.',
+    detail: 'Every change goes through peer code review before it merges.',
+  },
+  {
+    title: 'Ship & support',
+    body: 'Automated pipelines build, test, and deploy each release with Docker, Kubernetes, and Terraform.',
+    detail: 'After launch: production monitoring, troubleshooting, and ongoing maintenance.',
   },
 ]
 
@@ -188,19 +352,21 @@ export const experience: Role[] = [
   },
 ]
 
-export const featuredCaseStudy: CaseStudy = {
-  title: 'Enterprise RAG search',
-  context: 'Verizon',
-  summary:
-    'Production retrieval-augmented generation pipelines that turn enterprise documents into grounded answers, each linked back to its source material and scoped to what the user is allowed to see.',
-  points: [
-    'End-to-end pipeline: document ingestion and transformation, chunking, embeddings, and vector retrieval.',
-    'Contextual prompts with responses that cite the documents they came from.',
-    'AI-enabled workflows connecting .NET and Java services, databases, and internal APIs for enterprise search and automation.',
-    'Permission-aware retrieval so sensitive information never leaks into an answer.',
-  ],
-  stack: ['.NET', 'Java', 'LLMs', 'LangChain', 'LangGraph', 'Vector search', 'PostgreSQL'],
+export const education = {
+  degree: 'Bachelor of Science in Computer Science',
+  school: 'University of Central Florida',
+  location: 'Orlando, FL',
+  years: '2009 – 2013',
 }
+
+// An illustrative session showing the release workflow; not a recording of real output.
+export const terminal: TerminalEntry[] = [
+  { cmd: 'dotnet test Enterprise.Search.sln', out: ['✓ unit  ✓ integration  all tests passing'] },
+  { cmd: 'git push origin feature/permission-aware-retrieval', out: ['→ pull request opened · peer review requested'] },
+  { cmd: 'gh run watch', out: ['✓ build  ✓ test  ✓ docker image pushed'] },
+  { cmd: 'terraform plan -out=release.tfplan', out: ['Plan saved · infrastructure changes ready for review'] },
+  { cmd: 'kubectl rollout status deploy/search-api', out: ['deployment "search-api" successfully rolled out'] },
+]
 
 export const ragPipeline: PipelineStep[] = [
   { name: 'Ingest', detail: 'Pull documents from enterprise sources into a controlled ingestion pipeline.' },
@@ -212,53 +378,28 @@ export const ragPipeline: PipelineStep[] = [
   { name: 'Answer', detail: 'Return a response with links back to the source material it was built from.' },
 ]
 
-export const caseStudies: CaseStudy[] = [
+export const contactPoints = [
+  'Senior full-stack and AI engineering roles',
+  'C#/.NET, React, TypeScript, SQL Server, Azure',
+  'Ownership from architecture to production support',
+  'Based in Orlando, FL',
+]
+
+export const faq: Faq[] = [
   {
-    title: 'Secure data access for AI',
-    context: 'Verizon',
-    summary:
-      'Authentication, authorization, and application data controls that protect sensitive enterprise information across web and AI workloads.',
-    points: [
-      'Permission-aware retrieval in the RAG layer',
-      'PostgreSQL and SQL Server models tuned with indexes and caching',
-      'API access optimized for transactional and AI-assisted traffic',
-    ],
-    stack: ['.NET', 'Java', 'PostgreSQL', 'SQL Server', 'AuthN / AuthZ'],
+    q: 'What roles are you looking for?',
+    a: 'Senior full-stack and AI engineering roles where I can own features from architecture and data modeling through deployment and production support.',
   },
   {
-    title: 'Automated delivery platform',
-    context: 'Verizon',
-    summary:
-      'Build-and-deploy workflows that take services from commit to production, backed by monitoring and ongoing maintenance.',
-    points: [
-      'CI/CD pipelines in GitHub Actions',
-      'Containerized services on Docker and Kubernetes',
-      'Infrastructure as code with Terraform',
-    ],
-    stack: ['GitHub Actions', 'Docker', 'Kubernetes', 'Terraform'],
+    q: "What's your core stack?",
+    a: 'C# and .NET (ASP.NET MVC, ASP.NET Core, Web API, Entity Framework), React and TypeScript on the frontend, SQL Server and PostgreSQL for data, and Azure for cloud and delivery. I also work in Java/Spring Boot, Node.js, and Python.',
   },
   {
-    title: 'Enterprise SaaS services',
-    context: 'DealerSocket',
-    summary:
-      'SaaS applications, REST APIs, and microservices with React and Angular frontends, shipped through Azure DevOps pipelines.',
-    points: [
-      'Java/Spring Boot and Node.js microservices',
-      'OAuth 2.0, JWT, and role-based access control',
-      'Faster operational reporting via query tuning, caching, and async processing',
-    ],
-    stack: ['Spring Boot', 'Node.js', 'React', 'Angular', 'Azure DevOps'],
+    q: 'What AI experience do you have?',
+    a: 'At Verizon I built production RAG pipelines (ingestion, chunking, embeddings, vector retrieval, and source-linked responses) with permission-aware retrieval to protect sensitive data. I work with LLMs, LangChain, and LangGraph.',
   },
   {
-    title: 'Customer & business web apps',
-    context: 'Expedia Group',
-    summary:
-      'Responsive customer-facing websites, business portals, internal dashboards, and workflow applications on the Microsoft stack.',
-    points: [
-      'REST APIs for auth, accounts, reporting, and document management',
-      'Layered C# architecture with modular service components',
-      'Entity Framework persistence on SQL Server and MySQL',
-    ],
-    stack: ['C#', 'ASP.NET MVC', 'Web API', 'Entity Framework', 'SQL Server'],
+    q: 'Do you lead teams?',
+    a: 'Yes. I guide architecture decisions, run peer code reviews, plan delivery, mentor engineers, and work directly with product and business stakeholders in Agile Scrum teams.',
   },
 ]

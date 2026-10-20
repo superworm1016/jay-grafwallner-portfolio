@@ -1,43 +1,62 @@
-import { experience } from '../data/profile'
-import { Chip, Section } from './Section'
+import { education, experience } from '../data/profile'
+import { CheckIcon, GraduationCapIcon } from './icons'
+import { Chip, Reveal, Section } from './Section'
 
 export function Experience() {
   return (
-    <Section id="experience" index="03" eyebrow="Experience" title="Over a decade of shipping, from MVC to RAG.">
-      <ol className="relative ml-1.5 border-l border-zinc-200 dark:border-zinc-800">
+    <Section
+      id="experience"
+      label="Experience"
+      title="A decade of shipping production software"
+      intro="Enterprise teams in telecom, automotive SaaS, and travel since 2014."
+    >
+      <ol className="space-y-5">
         {experience.map((role) => (
-          <li key={role.company} className="relative pb-14 pl-8 last:pb-0 sm:pl-10">
-            <span
-              aria-hidden="true"
-              className="absolute top-1.5 -left-[7.5px] size-3.5 rounded-full border-2 border-teal-600 bg-stone-50 dark:border-teal-400 dark:bg-zinc-950"
-            />
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-              <h3 className="text-xl font-semibold tracking-tight">{role.title}</h3>
-              <p className="shrink-0 font-mono text-sm text-zinc-500">
-                {role.start} – {role.end}
-              </p>
-            </div>
-            <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-              <span className="font-medium text-zinc-900 dark:text-zinc-100">{role.company}</span> · {role.location}
-            </p>
-
-            <ul className="mt-5 max-w-3xl space-y-2.5">
-              {role.highlights.map((highlight) => (
-                <li key={highlight} className="flex gap-3 leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  <span aria-hidden="true" className="mt-3 h-px w-3 shrink-0 bg-teal-600 dark:bg-teal-400" />
-                  {highlight}
-                </li>
-              ))}
-            </ul>
-
-            <ul aria-label="Technologies" className="mt-5 flex flex-wrap gap-1.5">
-              {role.stack.map((item) => (
-                <Chip key={item}>{item}</Chip>
-              ))}
-            </ul>
+          <li key={role.company}>
+            <Reveal>
+              <article className="grid gap-6 rounded-2xl border border-line bg-card p-6 sm:p-8 md:grid-cols-[13rem_1fr] md:gap-10">
+                <div>
+                  <p className="font-mono text-xs tracking-[0.12em] text-muted-fg uppercase">
+                    {role.start} — {role.end}
+                  </p>
+                  <p className="mt-3 font-display text-xl font-semibold text-primary">{role.company}</p>
+                  <p className="mt-1 text-sm text-muted-fg">{role.location}</p>
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-bold tracking-tight sm:text-2xl">{role.title}</h3>
+                  <ul className="mt-5 space-y-3">
+                    {role.highlights.map((highlight) => (
+                      <li key={highlight} className="flex gap-3 text-[15px] leading-relaxed text-fg/85">
+                        <CheckIcon className="mt-1 size-4 shrink-0 text-primary" />
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                  <ul aria-label="Technologies" className="mt-6 flex flex-wrap gap-1.5">
+                    {role.stack.map((tech) => (
+                      <Chip key={tech}>{tech}</Chip>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            </Reveal>
           </li>
         ))}
       </ol>
+
+      <Reveal>
+        <div className="mt-5 flex items-center gap-4 rounded-2xl border border-line bg-card p-6 sm:p-8">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl border border-primary/30 bg-primary/10 text-primary">
+            <GraduationCapIcon className="size-6" />
+          </span>
+          <div>
+            <p className="font-display text-lg font-semibold">{education.degree}</p>
+            <p className="mt-0.5 text-sm text-muted-fg">
+              {education.school} · {education.location} · {education.years}
+            </p>
+          </div>
+        </div>
+      </Reveal>
     </Section>
   )
 }

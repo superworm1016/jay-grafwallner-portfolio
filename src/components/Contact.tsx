@@ -1,8 +1,67 @@
-import { useEffect, useState } from 'react'
-import { profile } from '../data/profile'
-import { CheckIcon, CopyIcon, DownloadIcon, MailIcon, MapPinIcon, PhoneIcon } from './icons'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
+import { contactPoints, faq, profile } from '../data/profile'
+import { ArrowUpRightIcon, CheckIcon, CopyIcon, DownloadIcon, MailIcon, PhoneIcon, PlusIcon } from './icons'
+import { Reveal, Section } from './Section'
 
-function CopyEmailButton() {
+const fieldClass =
+  'mt-2 w-full rounded-xl border border-line bg-bg px-4 py-3 text-fg placeholder:text-muted-fg/60 transition-colors focus:border-primary/60 focus:outline-none'
+
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <label className="block text-sm font-medium text-fg/90">
+      {label}
+      {children}
+    </label>
+  )
+}
+
+function MessageForm() {
+  // No backend: the form composes an email in the visitor's mail app.
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const data = new FormData(e.currentTarget)
+    const name = String(data.get('name') ?? '').trim()
+    const email = String(data.get('email') ?? '').trim()
+    const message = String(data.get('message') ?? '').trim()
+    const subject = `Portfolio inquiry from ${name}`
+    const body = `${message}\n\n— ${name} (${email})`
+    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="mt-7 space-y-4">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Name">
+          <input name="name" required autoComplete="name" placeholder="Your name" className={fieldClass} />
+        </Field>
+        <Field label="Email">
+          <input name="email" type="email" required autoComplete="email" placeholder="you@company.com" className={fieldClass} />
+        </Field>
+      </div>
+      <Field label="Message">
+        <textarea
+          name="message"
+          required
+          rows={5}
+          placeholder="Tell me about the role or project…"
+          className={`${fieldClass} resize-y`}
+        />
+      </Field>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1">
+        <button
+          type="submit"
+          className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-medium text-primary-fg shadow-[0_0_40px_-8px_rgb(81_229_126/0.6)] transition hover:brightness-110"
+        >
+          Send message
+          <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </button>
+        <p className="text-xs text-muted-fg">Opens your email app with the message filled in.</p>
+      </div>
+    </form>
+  )
+}
+
+function CopyEmail() {
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -24,79 +83,124 @@ function CopyEmailButton() {
     <button
       type="button"
       onClick={copy}
-      className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-5 py-3 font-medium text-white transition-colors hover:bg-white/10"
+      aria-label={copied ? 'Email copied' : 'Copy email address'}
+      className="grid size-8 shrink-0 place-items-center rounded-lg border border-line text-muted-fg transition-colors hover:border-white/20 hover:text-fg"
     >
-      {copied ? <CheckIcon className="size-4 text-teal-300" /> : <CopyIcon className="size-4" />}
-      <span aria-live="polite">{copied ? 'Copied!' : 'Copy email'}</span>
+      {copied ? <CheckIcon className="size-4 text-primary" /> : <CopyIcon className="size-4" />}
     </button>
   )
 }
 
-export function Contact() {
-  const details = [
-    { label: 'Email', value: profile.email, href: `mailto:${profile.email}`, Icon: MailIcon },
-    { label: 'Phone', value: profile.phone, href: profile.phoneHref, Icon: PhoneIcon },
-    { label: 'Location', value: profile.location, href: undefined, Icon: MapPinIcon },
-  ]
-
+function FaqList() {
+  const [open, setOpen] = useState(0)
   return (
-    <section id="contact" className="border-t border-zinc-200/80 py-20 sm:py-28 dark:border-zinc-800/80">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="relative isolate overflow-hidden rounded-3xl bg-zinc-900 px-6 py-12 text-white sm:px-12 sm:py-16 dark:ring-1 dark:ring-zinc-800">
-          <div
-            aria-hidden="true"
-            className="absolute -top-24 -right-24 -z-10 size-96 rounded-full bg-teal-500/25 blur-3xl"
-          />
-          <p className="font-mono text-sm text-teal-300">
-            <span className="text-zinc-500">05 /</span> Contact
-          </p>
-          <h2 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight text-balance sm:text-5xl">
-            Let's build something reliable.
-          </h2>
-          <p className="mt-5 max-w-xl text-lg text-zinc-300">
-            I'm open to senior full-stack and AI engineering roles. Email is the fastest way to reach me.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href={`mailto:${profile.email}`}
-              className="inline-flex items-center gap-2 rounded-lg bg-teal-400 px-5 py-3 font-medium text-zinc-950 transition-colors hover:bg-teal-300"
+    <ul className="mt-5 divide-y divide-line">
+      {faq.map((item, i) => {
+        const isOpen = open === i
+        return (
+          <li key={item.q}>
+            <h4>
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={`faq-${i}`}
+                onClick={() => setOpen(isOpen ? -1 : i)}
+                className="flex w-full items-center justify-between gap-4 py-4 text-left font-medium"
+              >
+                {item.q}
+                <PlusIcon
+                  className={`size-4 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-45 text-primary' : 'text-muted-fg'}`}
+                />
+              </button>
+            </h4>
+            <div
+              id={`faq-${i}`}
+              inert={!isOpen}
+              className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
             >
-              <MailIcon className="size-4" />
-              Email me
-            </a>
-            <CopyEmailButton />
-            <a
-              href={profile.resumeUrl}
-              download={profile.resumeFileName}
-              className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-5 py-3 font-medium text-white transition-colors hover:bg-white/10"
-            >
-              <DownloadIcon className="size-4" />
-              Résumé (PDF)
-            </a>
-          </div>
+              <p className="overflow-hidden text-sm leading-relaxed text-muted-fg">
+                <span className="block pb-4">{item.a}</span>
+              </p>
+            </div>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
 
-          <dl className="mt-12 grid gap-6 border-t border-white/10 pt-8 sm:grid-cols-3">
-            {details.map(({ label, value, href, Icon }) => (
-              <div key={label} className="flex items-start gap-3">
-                <Icon className="mt-0.5 size-5 shrink-0 text-teal-300" />
-                <div className="min-w-0">
-                  <dt className="text-sm text-zinc-400">{label}</dt>
-                  <dd className="mt-0.5 font-medium break-words">
-                    {href ? (
-                      <a href={href} className="hover:text-teal-300">
-                        {value}
-                      </a>
-                    ) : (
-                      value
-                    )}
-                  </dd>
+export function Contact() {
+  return (
+    <Section
+      id="contact"
+      label="Contact"
+      title="Let's build something reliable"
+      intro="I'm open to senior full-stack and AI engineering roles. Send a message or email me directly."
+    >
+      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <Reveal>
+          <div className="h-full rounded-2xl border border-line bg-card p-6 sm:p-8">
+            <h3 className="font-display text-2xl font-bold">Send a message</h3>
+            <p className="mt-2 text-muted-fg">Tell me about the role, the team, or the problem you're solving.</p>
+            <MessageForm />
+
+            <div className="mt-8 grid gap-4 border-t border-line pt-6 sm:grid-cols-2">
+              <div className="flex items-center gap-3">
+                <MailIcon className="size-5 shrink-0 text-primary" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs text-muted-fg">Prefer email?</p>
+                  <a href={`mailto:${profile.email}`} className="block truncate text-sm font-medium hover:text-primary">
+                    {profile.email}
+                  </a>
+                </div>
+                <CopyEmail />
+              </div>
+              <div className="flex items-center gap-3">
+                <PhoneIcon className="size-5 shrink-0 text-primary" />
+                <div>
+                  <p className="text-xs text-muted-fg">Phone</p>
+                  <a href={profile.phoneHref} className="text-sm font-medium hover:text-primary">
+                    {profile.phone}
+                  </a>
                 </div>
               </div>
-            ))}
-          </dl>
+            </div>
+          </div>
+        </Reveal>
+
+        <div className="space-y-6">
+          <Reveal delay={100}>
+            <div className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+              <h3 className="font-display text-xl font-bold">What I'm looking for</h3>
+              <ul className="mt-5 space-y-3">
+                {contactPoints.map((point) => (
+                  <li key={point} className="flex items-start gap-3 text-[15px] text-fg/90">
+                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
+                      <CheckIcon className="size-3" />
+                    </span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={profile.resumeUrl}
+                download={profile.resumeFileName}
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-line bg-bg px-5 py-2.5 text-sm font-medium transition-colors hover:border-primary/40 hover:text-primary"
+              >
+                <DownloadIcon className="size-4" />
+                Download résumé (PDF)
+              </a>
+            </div>
+          </Reveal>
+
+          <Reveal delay={200}>
+            <div className="rounded-2xl border border-line bg-card p-6 sm:p-8">
+              <h3 className="font-display text-xl font-bold">Frequently asked</h3>
+              <FaqList />
+            </div>
+          </Reveal>
         </div>
       </div>
-    </section>
+    </Section>
   )
 }
