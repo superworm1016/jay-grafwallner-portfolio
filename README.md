@@ -41,9 +41,9 @@ To add GitHub or LinkedIn links, add them to `profile` and render them in `Hero.
 
 ### GitHub Pages
 
-1. Push this folder to a GitHub repository on the `main` branch.
-2. In the repo, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
-3. The workflow in `.github/workflows/deploy.yml` builds and publishes the site on every push to `main`.
+Live site: https://superworm1016.github.io/jay-grafwallner-portfolio/
+
+On every push to `main`, the workflow in `.github/workflows/deploy.yml` builds the site and publishes `dist/` to the `gh-pages` branch. GitHub Pages serves that branch (**Settings → Pages → Source: Deploy from a branch → `gh-pages` / root**). Changes go live a minute or two after pushing.
 
 ### Netlify, Vercel, or Azure Static Web Apps
 
